@@ -4,7 +4,8 @@ import "fmt"
 
 func main() {
 	//array()
-	slice()
+	//slice()
+	goMap()
 }
 
 func array() {
@@ -124,4 +125,42 @@ func slice() {
 	fmt.Println(mArr)
 	fmt.Println(testmArr)
 
+}
+
+func goMap() {
+	// map[Key 타입]value 타입 -> 레퍼런스 타입
+	var idMap map[int]string // 아직 idMap 은 nil 값을 가진다.
+
+	// make() 를 통해서 초기화 해줘야 한다.
+	idMap = make(map[int]string)
+	idMap[2] = "2"
+	idMap[3] = "3"
+	idMap[4] = "4"
+	idMap[5] = "temp"
+	idMap[5] = "string"
+
+	// map 을 참조할 때 해당 key 의 value 와 존재 여부를 같이 반환한다.
+	val, ex := idMap[5]
+	if ex {
+		fmt.Println(val)
+	} else {
+		fmt.Println("No idMap[5]")
+	}
+
+	a := idMap[0]
+	fmt.Println("idMap[0] : ", a)
+
+	// k-v 삭제
+	delete(idMap, 5)
+	fmt.Println(idMap[5])
+
+	// map for range
+	myMap := map[string]string{
+		"A": "Apple",
+		"B": "Banana",
+		"C": "Charlie",
+	}
+	for key, val := range myMap {
+		fmt.Println(key, val)
+	}
 }
