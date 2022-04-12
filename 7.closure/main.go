@@ -18,6 +18,10 @@ func main() {
 	fmt.Println(anotherNext()) // 다시 시작
 	fmt.Println(anotherNext())
 	fmt.Println(anotherNext())
+
+	sum := nextValueByArgs()
+	fmt.Println("args sum : ", sum(1, 2, 3, 4, 5))
+
 }
 
 // 함수의 캡슐화가 가능하다.
@@ -32,6 +36,16 @@ func nextValue() func() int {
 	i := 0
 	return func() int {
 		i++
+		return i
+	}
+}
+
+func nextValueByArgs() func(args ...int) int {
+	i := 0
+	return func(args ...int) int {
+		for _, n := range args {
+			i += n
+		}
 		return i
 	}
 }
