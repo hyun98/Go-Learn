@@ -21,6 +21,36 @@ func (r *Rect) area2() int{
 	return r.width * r.height
 }
 
+// struct 상속(임베딩)
+type person struct {
+	name string
+	age int
+}
+func (p *person) greeting1() {
+	fmt.Println("person!! greet!")
+}
+
+type animal struct {
+	spec string
+}
+func (a *animal) greeting2() {
+	fmt.Println("animal!! greet!")
+}
+
+type Student1 struct {
+	p person // 학생 구조체 안에 사람 구조체를 필드로 가지고 있음. Has-a 관계
+	school string
+	grade  int
+}
+
+type Student2 struct {
+	person // 필드명 없이 타입만 선언하면 포함(Is-a) 관계가 됨
+	animal // 2개도 가능. 하지만 타입의 메서드 명이 같은게 있다면 컴파일 에러 발생
+	// 그냥 2개 쓰지말자.
+	school string
+	grade  int
+}
+
 func main() {
 	rect := Rect{width: 10, height: 20}
 	area := rect.area()
@@ -29,5 +59,14 @@ func main() {
 	fmt.Println(rect.width)
 	fmt.Println(area)
 
+	// struct 임베딩
+	s := Student1{}
 
+	// student 는 p 를 가지고 있기 때문에 greeting 호출 가능
+	s.p.greeting1()
+
+	s2 := Student2{}
+	// student 는 person 을 상속받는다고 가정할 수 있음.
+	s2.greeting1()
+	s2.greeting2()
 }
