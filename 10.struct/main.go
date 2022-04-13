@@ -31,7 +31,7 @@ func main() {
 	fmt.Println(p3) // &{Lee 0}
 
 	// 생성자 (constructor)
-	// struct 객체를 만들 때 
+	// struct 객체를 만들 때
 	dic := newDict()
 	dic.data[1] = "A"
 	fmt.Println(dic)  // &{map[1:A]}
