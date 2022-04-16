@@ -12,6 +12,7 @@ import (
 // 해당 인터페이스가 갖는 모든 메서드들을 구현하면 된다.
 
 // -> 만약 Rect 가 Shape 을 자신의 인터페이스로 갖고 싶다면
+// == Rect 에 implement Shape 를 추가하려면
 // Shape 에 정의된 원형을 모두 구현하면 Shape 은 Rect 의 인터페이스가 된다.
 
 type Shape interface {
