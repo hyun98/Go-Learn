@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"log"
 )
 
 // Go 에러는 error 인터페이스를 통해서 주고 받는다.
@@ -27,14 +29,23 @@ func isSame(a int, b int) (bool, error) {
 	return true, nil
 }
 
-func main() {
-	//f, err := os.Open("./temp.txt")
-	//if err != nil {
-	//	log.Fatal(err.Error())
-	//} else {
-	//	fmt.Println(f.Name())
-	//}
+func divide(a float32, b float32) (result float32, err error) {
+	if b == 0 {
+		return 0, errors.New("0으로 나누지마")
+	}
+	result = a / b
+	return
+}
 
+func divide2(a float32, b float32) (result float32, err error) {
+	if b == 0 {
+		return 0, fmt.Errorf("%.2f으로 나누지마", b)
+	}
+	result = a / b
+	return
+}
+
+func main() {
 	a := 10
 	b := 20
 	res, err := isSame(a, b)
@@ -43,4 +54,21 @@ func main() {
 	} else {
 		fmt.Println(res)
 	}
+
+	var num1, num2 float32
+
+	fmt.Scanln(&num1, &num2)
+	//result, err := divide(num1, num2)
+	//
+	//if err != nil {
+	//	panic(err)
+	//}
+	//fmt.Println(result)
+
+	fmt.Scanln(&num1, &num2)
+	result2, err2 := divide(num1, num2)
+	if err2 != nil {
+		log.Print(err2)
+	}
+	fmt.Println(result2)
 }
