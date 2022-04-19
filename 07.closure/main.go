@@ -22,6 +22,14 @@ func main() {
 	sum := nextValueByArgs()
 	fmt.Println("args sum : ", sum(1, 2, 3, 4, 5))
 
+	var a, b int = 20, 10
+	result := func() int {
+		return a + b
+	}
+	func() {
+		fmt.Println("lambda")
+		fmt.Println(result())
+	}()
 }
 
 // 함수의 캡슐화가 가능하다.
