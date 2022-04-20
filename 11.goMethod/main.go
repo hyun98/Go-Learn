@@ -2,7 +2,8 @@ package main
 
 import "fmt"
 
-// Go 언어는 struct가 필드만을 가지며, 메서드는 별도로 분리되어 정의된다.
+// Go 언어는 struct 가 필드만을 가지며, 메서드는 별도로 분리되어 정의된다.
+
 type Rect struct {
 	width, height int
 }
@@ -16,7 +17,7 @@ func (r Rect) area() int {
 
 // 포인터 receiver
 // 객체의 포인터로 받는다.
-func (r *Rect) area2() int{
+func (r *Rect) area2() int {
 	r.width++
 	return r.width * r.height
 }
@@ -24,8 +25,9 @@ func (r *Rect) area2() int{
 // struct 상속(임베딩)
 type person struct {
 	name string
-	age int
+	age  int
 }
+
 func (p *person) greeting1() {
 	fmt.Println("person!! greet!")
 }
@@ -33,12 +35,13 @@ func (p *person) greeting1() {
 type animal struct {
 	spec string
 }
+
 func (a *animal) greeting2() {
 	fmt.Println("animal!! greet!")
 }
 
 type Student1 struct {
-	p person // 학생 구조체 안에 사람 구조체를 필드로 가지고 있음. Has-a 관계
+	p      person // 학생 구조체 안에 사람 구조체를 필드로 가지고 있음. Has-a 관계
 	school string
 	grade  int
 }
