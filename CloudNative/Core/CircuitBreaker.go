@@ -1,4 +1,4 @@
-package main
+package Core
 
 import (
 	"context"
@@ -6,11 +6,6 @@ import (
 	"sync"
 	"time"
 )
-
-// Circuit
-// DB 또는 다른 서비스와 상호 작용하는 함수의 시그니처
-// Context 를 받아서 (string, error) 를 반환하는 Circuit 이라는 람다 함수 형식 정의
-type Circuit func(context.Context) (string, error)
 
 // Breaker
 // 클로저 개념이 적용되었다 - 필요한 기능을 제공하기 위해 circuit 을 감싼 또 다른 함수를 만들었다.
@@ -53,8 +48,4 @@ func Breaker(circuit Circuit, failureThreshold uint) Circuit {
 
 		return response, nil
 	}
-}
-
-func main() {
-
 }
