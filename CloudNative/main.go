@@ -21,14 +21,29 @@ func EmulateTransientError(ctx context.Context) (string, error) {
 }
 
 func main() {
+	ctx := context.Background()
 	//serviceCircuit := func(ctx context.Context) (string, error) {
 	//	return "success", nil
 	//}
 
 	//wrapped := Core.Breaker(Core.DebounceLast(serviceCircuit, time.Millisecond*100), 10)
 
-	r := Core.Retry(EmulateTransientError, 5, 2*time.Second)
+	//r := Core.Retry(EmulateTransientError, 5, 2*time.Second)
+	//
+	//res, err := r(context.Background())
+	//fmt.Println(res, err)
 
-	res, err := r(context.Background())
+	ctxt, cancel := context.WithTimeout(ctx, time.Second*1)
+	defer cancel()
+
+	timeout := Core.Timeout(Slow)
+	res, err := timeout(ctxt, "hello, world")
+
 	fmt.Println(res, err)
+
+}
+
+func Slow(str string) (string, error) {
+	time.Sleep(2 * time.Second)
+	return str, nil
 }
