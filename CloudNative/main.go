@@ -21,7 +21,7 @@ func EmulateTransientError(ctx context.Context) (string, error) {
 }
 
 func main() {
-	ctx := context.Background()
+	//ctx := context.Background()
 	//serviceCircuit := func(ctx context.Context) (string, error) {
 	//	return "success", nil
 	//}
@@ -33,14 +33,35 @@ func main() {
 	//res, err := r(context.Background())
 	//fmt.Println(res, err)
 
-	ctxt, cancel := context.WithTimeout(ctx, time.Second*1)
-	defer cancel()
+	//ctxt, cancel := context.WithTimeout(ctx, time.Second*1)
+	//defer cancel()
+	//
+	//timeout := Core.Timeout(Slow)
+	//res, err := timeout(ctxt, "hello, world")
+	//
+	//fmt.Println(res, err)
 
-	timeout := Core.Timeout(Slow)
-	res, err := timeout(ctxt, "hello, world")
+	/* Funnel 실행 */
+	sources := make([]<-chan int, 0) // 빈 수신 채널 슬라이스 생성
 
-	fmt.Println(res, err)
+	for i := 0; i < 3; i++ {
+		ch := make(chan int)
+		sources = append(sources, ch)
 
+		go func() {
+			defer close(ch)
+
+			for i := 1; i <= 5; i++ {
+				ch <- i
+				time.Sleep(time.Second)
+			}
+		}()
+	}
+
+	dest := Core.Funnel(sources...)
+	for d := range dest {
+		fmt.Println(d)
+	}
 }
 
 func Slow(str string) (string, error) {
