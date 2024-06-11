@@ -21,8 +21,8 @@ func (m *Mongo) GetUserBucket(user string) (*types.User, error) {
 func (m *Mongo) GetContent(name string) ([]*types.Content, error) {
 	filter := bson.M{}
 
-	if name == "" {
-		filter["user"] = name
+	if name != "" {
+		filter["name"] = name
 	}
 
 	ctx := context.Background()
@@ -31,7 +31,7 @@ func (m *Mongo) GetContent(name string) ([]*types.Content, error) {
 	} else {
 		defer cursor.Close(ctx)
 		var res []*types.Content
-		if err := cursor.All(ctx, res); err != nil {
+		if err := cursor.All(ctx, &res); err != nil {
 			return nil, err
 		} else {
 			return res, nil
