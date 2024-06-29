@@ -1,0 +1,42 @@
+syntax = "proto3";
+option go_package = "/auth";
+
+message AuthData {
+  string name = 1;
+  string token = 2;
+  int64 createDate = 3;
+  int64 expireDate = 4;
+}
+
+message Verify {
+  ResponseType status = 1;
+  AuthData auth = 2;
+}
+
+enum ResponseType {
+  SUCCESS = 0;
+  FAILED = 1;
+  EXPIRED_DATE = 2;
+}
+
+message CreateTokenReq {
+  AuthData auth = 1;
+}
+
+message CreateTokenRes{
+  AuthData auth = 1;
+}
+
+message VerifyTokenReq{
+  string token = 1;
+}
+
+message VerifyTokenRes{
+  Verify v = 1;
+}
+
+
+service AuthService {
+  rpc CreateAuth(CreateTokenReq) returns (CreateTokenRes);
+  rpc VerifyAuth(VerifyTokenReq) returns (VerifyTokenRes);
+}
