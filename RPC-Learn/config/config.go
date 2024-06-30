@@ -16,7 +16,8 @@ type Config struct {
 	}
 
 	GRPC struct {
-		URL string
+		Domain string
+		Port   string
 	}
 }
 

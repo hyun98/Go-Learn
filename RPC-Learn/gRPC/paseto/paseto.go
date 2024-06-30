@@ -29,6 +29,6 @@ func (pm *PasetoMaker) CreateNewToken(authData *auth.AuthData) (string, error) {
 }
 
 func (pm *PasetoMaker) VerifyToken(token string) error {
-	var authData *auth.AuthData
-	return pm.Pt.Decrypt(token, pm.Key, authData, nil)
+	var authData auth.AuthData
+	return pm.Pt.Decrypt(token, pm.Key, &authData, nil)
 }

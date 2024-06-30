@@ -5,6 +5,7 @@ import (
 	"RPC-Learn/gRPC/paseto"
 	auth "RPC-Learn/gRPC/proto"
 	"context"
+	"errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -19,7 +20,7 @@ type GRPCServer struct {
 }
 
 func NewGRPCServer(config *config.Config) error {
-	if lis, err := net.Listen("tcp", config.GRPC.URL); err != nil {
+	if lis, err := net.Listen("tcp", config.GRPC.Port); err != nil {
 		return err
 	} else {
 		server := grpc.NewServer([]grpc.ServerOption{}...)
@@ -43,12 +44,14 @@ func NewGRPCServer(config *config.Config) error {
 }
 
 func (g *GRPCServer) CreateAuth(ctx context.Context, req *auth.CreateTokenReq) (*auth.CreateTokenRes, error) {
-	data := req.Auth
-	token := data.Token
-
-	g.tokenVerifyMap[token] = data
-
-	return &auth.CreateTokenRes{Auth: data}, nil
+	if token, err := g.pasetoMaker.CreateNewToken(req.Auth); err != nil {
+		return nil, err
+	} else {
+		req.Auth.Token = token
+		data := req.Auth
+		g.tokenVerifyMap[token] = data
+		return &auth.CreateTokenRes{Auth: data}, nil
+	}
 }
 
 func (g *GRPCServer) VerifyAuth(ctx context.Context, req *auth.VerifyTokenReq) (*auth.VerifyTokenRes, error) {
@@ -59,11 +62,16 @@ func (g *GRPCServer) VerifyAuth(ctx context.Context, req *auth.VerifyTokenReq) (
 
 	if authData, ok := g.tokenVerifyMap[token]; !ok {
 		res.V.Status = auth.ResponseType_FAILED
+		return nil, errors.New("not existed token")
+	} else if err := g.pasetoMaker.VerifyToken(token); err != nil {
+		res.V.Status = auth.ResponseType_FAILED
+		return nil, errors.New("failed verify token")
 	} else if authData.ExpireDate < time.Now().Unix() {
 		res.V.Status = auth.ResponseType_EXPIRED_DATE
+		return nil, errors.New("token expired")
 	} else {
 		res.V.Status = auth.ResponseType_SUCCESS
+		return res, nil
 	}
 
-	return res, nil
 }

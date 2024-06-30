@@ -19,7 +19,7 @@ type GRPCClient struct {
 func NewGRPCClient(config *config.Config) (*GRPCClient, error) {
 	c := &GRPCClient{}
 
-	if client, err := grpc.NewClient(config.GRPC.URL, grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
+	if client, err := grpc.NewClient(config.GRPC.Domain+config.GRPC.Port, grpc.WithTransportCredentials(insecure.NewCredentials())); err != nil {
 		return nil, err
 	} else {
 		c.client = client
@@ -40,16 +40,10 @@ func (g *GRPCClient) CreateAuth(name string) (*auth.CreateTokenRes, error) {
 		ExpireDate: expiredTime.Unix(),
 	}
 
-	if token, err := g.pasetoMaker.CreateNewToken(authData); err != nil {
+	if res, err := g.authServiceClient.CreateAuth(context.Background(), &auth.CreateTokenReq{Auth: authData}); err != nil {
 		return nil, err
 	} else {
-		authData.Token = token
-
-		if res, err := g.authServiceClient.CreateAuth(context.Background(), &auth.CreateTokenReq{Auth: authData}); err != nil {
-			return nil, err
-		} else {
-			return res, nil
-		}
+		return res, nil
 	}
 }
 
